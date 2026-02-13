@@ -17,8 +17,8 @@ COPY . .
 # Install ALL deps including devDependencies (needed for build)
 RUN npm ci
 
-# Generate Prisma client and build Next.js
-RUN npx prisma generate && npm run build
+# Generate Prisma client, run migrations (needed for SSG pages), then build
+RUN npx prisma generate && touch /app/dev.db && npx prisma migrate deploy && npm run build
 
 # Set production after build
 ENV NODE_ENV=production
