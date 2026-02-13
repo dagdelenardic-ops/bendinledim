@@ -17,8 +17,10 @@ COPY . .
 # Install ALL deps including devDependencies (needed for build)
 RUN npm ci
 
-# Generate Prisma client, run migrations (needed for SSG pages), then build
-RUN npx prisma generate && touch /app/dev.db && npx prisma migrate deploy && npm run build
+# Seed the sqlite DB into the image (optional).
+# If prisma/seed.db exists, use it as the initial content; otherwise create an empty DB file.
+RUN if [ -f prisma/seed.db ]; then cp prisma/seed.db /app/dev.db; else touch /app/dev.db; fi && \
+    npx prisma generate && npx prisma migrate deploy && npm run build
 
 # Next.js standalone requires static assets to be copied manually
 RUN cp -r .next/static .next/standalone/.next/static && \
