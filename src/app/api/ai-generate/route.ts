@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { pickArticleImageUrl } from "@/lib/commonsImages";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
@@ -219,31 +220,14 @@ Her haber gerçek bir olayı anlatmalı ve TÜRKÇE olmalı. Toplam ${count} ade
         counter++;
       }
 
-      // Her haber için farklı görsel URL'i oluştur
-      const unsplashImages = [
-        `https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80`, // konser
-        `https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80`, // festival
-        `https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80`, // stüdyo
-        `https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80`, // sahne
-        `https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&q=80`, // ışıklar
-        `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80`, // performans
-        `https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=800&q=80`, // piyano
-        `https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&q=80`, // gitar
-        `https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800&q=80`, // plak
-        `https://images.unsplash.com/photo-1484876065684-b683cf17d276?w=800&q=80`, // müzik
-      ];
-      
-      // Rastgele görsel seç (kategoriye göre değişebilir)
-      let imageIndex = Math.floor(Math.random() * unsplashImages.length);
-      
-      // Kategoriye göre görsel seçimi
-      if (article.category === "Konserler" || article.category === "Festival") {
-        imageIndex = Math.floor(Math.random() * 4); // İlk 4 görsel konser/festival temalı
-      } else if (article.category === "İncelemeler") {
-        imageIndex = 7 + Math.floor(Math.random() * 3); // Gitar/plak/müzik temalı
-      }
-      
-      const imageUrl = unsplashImages[imageIndex];
+      // İçerikte geçen konuya uygun (stok olmayan) görsel seç.
+      const imageUrl =
+        (await pickArticleImageUrl({
+          title: article.title,
+          category: article.category,
+          artist: article.artist,
+          imageSearch: article.imageSearch,
+        })) || undefined;
 
       const saved = await prisma.article.create({
         data: {

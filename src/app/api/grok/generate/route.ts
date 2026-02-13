@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { pickArticleImageUrl } from "@/lib/commonsImages";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
@@ -227,14 +228,20 @@ Her haber gerçek bir olayı anlatmalı. Toplam ${count} adet haber oluştur.`;
       }
 
       // Haberi kaydet
-      const imageQuery = article.imageSearch || article.artist || article.category;
+      const imageUrl =
+        (await pickArticleImageUrl({
+          title: article.title,
+          category: article.category,
+          artist: article.artist,
+          imageSearch: article.imageSearch,
+        })) || undefined;
       const saved = await prisma.article.create({
         data: {
           title: article.title,
           slug: slug,
           content: article.content,
           excerpt: article.excerpt,
-          imageUrl: `https://source.unsplash.com/800x450/?${encodeURIComponent(imageQuery)},music,concert`,
+          imageUrl: imageUrl,
           author: "Editör Ekibi",
           readTime: Math.ceil(article.content.length / 1000),
           featured: Math.random() > 0.7, // %30 ihtimalle öne çıkan

@@ -45,6 +45,10 @@ next-env.d.ts
 # local sqlite
 /dev.db
 /prisma/dev.db
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
 
 # local-only admin tool (not deployed / not committed)
 /admin.local.html
