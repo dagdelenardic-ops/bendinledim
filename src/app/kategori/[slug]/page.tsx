@@ -64,7 +64,7 @@ export default async function CategoryPage({ params }: Props) {
       <Sidebar />
       <div className="lg:ml-64">
         <Header />
-        <main className="max-w-5xl mx-auto px-4 py-6">
+        <main className="max-w-6xl mx-auto px-4 py-6 lg:px-6">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-vintage-beige/50 mb-6">
             <Link href="/" className="hover:text-primary transition-colors">

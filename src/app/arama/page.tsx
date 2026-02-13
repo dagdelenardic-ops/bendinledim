@@ -51,7 +51,7 @@ export default async function SearchPage({ searchParams }: Props) {
       <Sidebar />
       <div className="lg:ml-64">
         <Header />
-        <main className="max-w-5xl mx-auto px-4 py-6">
+        <main className="max-w-6xl mx-auto px-4 py-6 lg:px-6">
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">

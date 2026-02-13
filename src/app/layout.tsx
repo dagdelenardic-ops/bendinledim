@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Newsreader } from "next/font/google";
 import "./globals.css";
+import { absUrl, SITE_URL } from "@/lib/site";
 
 const newsreader = Newsreader({
   variable: "--font-display",
@@ -18,6 +19,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Ben Dinledim | Indie Müzik Blogu",
     template: "%s | Ben Dinledim",
@@ -52,7 +54,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "tr_TR",
-    url: "https://bendinledim.com",
+    url: SITE_URL,
     siteName: "Ben Dinledim",
     title: "Ben Dinledim | Indie Müzik Blogu",
     description:
@@ -75,7 +77,7 @@ export const metadata: Metadata = {
     creator: "@bendinledim",
   },
   alternates: {
-    canonical: "https://bendinledim.com",
+    canonical: SITE_URL,
   },
   icons: {
     icon: "/favicon.ico",
@@ -84,7 +86,10 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   verification: {
-    google: "google-site-verification-code",
+    // Keep this in code for now; you can also set it via env if you prefer.
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      "google-site-verification-code",
   },
 };
 
@@ -93,6 +98,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteUrlNoSlash = SITE_URL.replace(/\/+$/, "");
   return (
     <html lang="tr" className="dark">
       <head>
@@ -123,14 +129,14 @@ export default function RootLayout({
                 name: "Ben Dinledim",
                 logo: {
                   "@type": "ImageObject",
-                  url: "https://bendinledim.com/logo.png",
+                  url: absUrl("/logo.png"),
                 },
               },
               potentialAction: {
                 "@type": "SearchAction",
                 target: {
                   "@type": "EntryPoint",
-                  urlTemplate: "https://bendinledim.com/arama?q={search_term_string}",
+                  urlTemplate: `${siteUrlNoSlash}/arama?q={search_term_string}`,
                 },
                 "query-input": "required name=search_term_string",
               },

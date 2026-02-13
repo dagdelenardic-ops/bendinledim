@@ -7,6 +7,7 @@ import ArticleCard from "@/components/ArticleCard";
 import EditorsPickCard from "@/components/EditorsPickCard";
 import Link from "next/link";
 import Script from "next/script";
+import { absUrl } from "@/lib/site";
 
 export const metadata = {
   title: "Ben Dinledim | Indie Müzik Blogu",
@@ -48,7 +49,7 @@ export default async function Home() {
               item: {
                 "@type": "NewsArticle",
                 headline: featured.title,
-                url: `https://bendinledim.com/haber/${featured.slug}`,
+                url: absUrl(`/haber/${featured.slug}`),
                 image: featured.imageUrl,
                 datePublished: featured.createdAt.toISOString(),
                 author: {
@@ -65,7 +66,7 @@ export default async function Home() {
         item: {
           "@type": "NewsArticle",
           headline: article.title,
-          url: `https://bendinledim.com/haber/${article.slug}`,
+          url: absUrl(`/haber/${article.slug}`),
           image: article.imageUrl,
           datePublished: article.createdAt.toISOString(),
           author: {
@@ -89,7 +90,7 @@ export default async function Home() {
       <Sidebar />
       <div className="lg:ml-64">
         <Header />
-        <main className="max-w-5xl mx-auto">
+        <main className="max-w-6xl mx-auto lg:px-6">
           {/* Hero Section - Featured Article */}
           {featured && (
             <section className="px-4 pt-4 pb-8">

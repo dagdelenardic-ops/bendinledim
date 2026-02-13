@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { timeAgo } from "@/lib/utils";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { absUrl, SITE_URL } from "@/lib/site";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -28,12 +29,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
+    metadataBase: new URL(SITE_URL),
     title: article.title,
     description: article.excerpt,
     openGraph: {
       title: article.title,
       description: article.excerpt,
       type: "article",
+      url: absUrl(`/haber/${article.slug}`),
       publishedTime: article.createdAt.toISOString(),
       modifiedTime: article.updatedAt.toISOString(),
       authors: [article.author],
@@ -94,12 +97,12 @@ export default async function ArticlePage({ params }: Props) {
       name: "Ben Dinledim",
       logo: {
         "@type": "ImageObject",
-        url: "https://bendinledim.com/logo.png",
+        url: absUrl("/logo.png"),
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://bendinledim.com/haber/${article.slug}`,
+      "@id": absUrl(`/haber/${article.slug}`),
     },
     articleSection: article.category.name,
     keywords: article.tags.map((t) => t.tag.name).join(", "),
@@ -117,7 +120,7 @@ export default async function ArticlePage({ params }: Props) {
       <Sidebar />
       <div className="lg:ml-64">
         <Header />
-        <main className="max-w-3xl mx-auto px-4 py-6">
+        <main className="max-w-4xl mx-auto px-4 py-6 lg:px-6">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-vintage-beige/50 mb-6">
             <Link href="/" className="hover:text-primary transition-colors">
