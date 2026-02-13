@@ -1,0 +1,70 @@
+name: Deploy Live App to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "!src/app/admin/**"
+      - "prisma/**"
+      - "prisma.config.ts"
+      - "middleware.ts"
+      - "Dockerfile"
+      - "next.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+      - ".github/workflows/deploy-google.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      REGION: ${{ secrets.GCP_REGION }}
+      SERVICE: ${{ secrets.GCP_CLOUD_RUN_SERVICE }}
+      IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_CLOUD_RUN_SERVICE }}:${{ github.sha }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Required Secrets
+        run: |
+          test -n "$PROJECT_ID" || (echo "Missing GCP_PROJECT_ID secret" && exit 1)
+          test -n "$REGION" || (echo "Missing GCP_REGION secret" && exit 1)
+          test -n "$SERVICE" || (echo "Missing GCP_CLOUD_RUN_SERVICE secret" && exit 1)
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure gcloud Project
+        run: gcloud config set project "$PROJECT_ID"
+
+      - name: Build Container Image
+        run: gcloud builds submit --tag "$IMAGE"
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy "$SERVICE" \
+            --image "$IMAGE" \
+            --platform managed \
+            --region "$REGION" \
+            --allow-unauthenticated \
+            --set-env-vars "NODE_ENV=production,PORT=8080,DATABASE_URL=file:/app/dev.db,ENABLE_ADMIN_DASHBOARD=false,ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }},ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }},OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}"
+
+      - name: Print Service URL
+        run: |
+          gcloud run services describe "$SERVICE" \
+            --region "$REGION" \
+            --format='value(status.url)'

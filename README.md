@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ben Dinledim
 
-## Getting Started
+Next.js tabanli muzik haber platformu.
 
-First, run the development server:
+## Lokal Calistirma
 
 ```bash
+npm ci
+touch dev.db
+# Prisma 7 + sqlite: db dosyasi yoksa migrate deploy baglanamaz
+DATABASE_URL=file:./dev.db npx prisma migrate deploy
+npx prisma generate
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Varsayilan port: `3001`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Zorunlu Ortam Degiskenleri
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`.env` icinde en az su degiskenleri tanimlayin:
 
-## Learn More
+```bash
+# Lokal: repo kokunde dev.db
+DATABASE_URL=file:./dev.db
 
-To learn more about Next.js, take a look at the following resources:
+# Docker / Cloud Run: Next.js standalone server CWD degistirdigi icin sqlite yolu absolute olmali
+# (isterseniz Dockerfile zaten varsayilan olarak bunu set ediyor)
+# DATABASE_URL=file:/app/dev.db
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=guclu-bir-sifre
+GEMINI_API_KEY=...
+OPENAI_API_KEY=...
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Guvenlik
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Uretim ortaminda `/admin` varsayilan olarak kapali (404). Acmak icin `ENABLE_ADMIN_DASHBOARD=true` verin.
+- Icerik yonetimi icin yerelde `admin.local.html` kullanilir (deploy edilmez).
+- Admin API endpointleri Basic Auth ile korunur.
+- `ADMIN_USERNAME` ve `ADMIN_PASSWORD` yoksa korumali endpointler `503` doner.
 
-## Deploy on Vercel
+## Docker
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+docker build -t bendinledim .
+docker run -p 8080:8080 \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD=guclu-bir-sifre \
+  -e OPENAI_API_KEY=... \
+  -e GEMINI_API_KEY=... \
+  bendinledim
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## GitHub -> Google Cloud Run Deploy
+
+Workflow dosyasi: `.github/workflows/deploy-google.yml`
+
+Main branch'e push oldugunda otomatik deploy eder. `src/app/admin/**` degisiklikleri deploy tetiklemez.
+
+Gerekli GitHub Secrets:
+
+- `GCP_SA_KEY`
+- `GCP_PROJECT_ID`
+- `GCP_REGION`
+- `GCP_CLOUD_RUN_SERVICE`
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+- `OPENAI_API_KEY`
+- `GEMINI_API_KEY`
+
+## Local Admin (admin.local.html)
+
+Dosya: `admin.local.html` (git ve docker ignore).
+
+Bu arayuz:
+- `POST /api/chatgpt` ile ChatGPT uretimi yapar (anahtar sunucuda `OPENAI_API_KEY` olarak durur).
+- `POST /api/articles` ve `PUT /api/articles/:slug` ile canliya kaydeder.
