@@ -20,6 +20,10 @@ RUN npm ci
 # Generate Prisma client, run migrations (needed for SSG pages), then build
 RUN npx prisma generate && touch /app/dev.db && npx prisma migrate deploy && npm run build
 
+# Next.js standalone requires static assets to be copied manually
+RUN cp -r .next/static .next/standalone/.next/static && \
+    cp -r public .next/standalone/public
+
 # Set production after build
 ENV NODE_ENV=production
 
