@@ -11,11 +11,12 @@ ENV HOSTNAME=0.0.0.0
 ENV DATABASE_URL=file:/app/dev.db
 
 COPY package*.json ./
-RUN npm ci
+# Skip postinstall (prisma generate) during npm ci because schema isn't copied yet
+RUN npm ci --ignore-scripts
 
 COPY . .
 
-# Prisma client must exist before Next.js build.
+# Now generate Prisma client and build
 RUN npx prisma generate && npm run build
 
 EXPOSE 8080
