@@ -61,7 +61,7 @@ jobs:
             --platform managed \
             --region "$REGION" \
             --allow-unauthenticated \
-            --set-env-vars "NODE_ENV=production,PORT=8080,DATABASE_URL=file:/app/dev.db,ENABLE_ADMIN_DASHBOARD=false,ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }},ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }},OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}"
+            --set-env-vars "NODE_ENV=production,DATABASE_URL=file:/app/dev.db,ENABLE_ADMIN_DASHBOARD=false,ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }},ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }},OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}"
 
       - name: Print Service URL
         run: |
