@@ -3,7 +3,6 @@ FROM node:20-bookworm-slim
 WORKDIR /app
 
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 ENV PORT=8080
 ENV HOSTNAME=0.0.0.0
 # Next.js standalone server changes CWD to `.next/standalone`.
@@ -17,6 +16,9 @@ RUN npm ci --ignore-scripts
 
 # Generate Prisma client and build Next.js
 RUN npx prisma generate && npm run build
+
+# Set production after build
+ENV NODE_ENV=production
 
 EXPOSE 8080
 
