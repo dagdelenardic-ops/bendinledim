@@ -29,12 +29,13 @@ export default function FeaturedArticle({
         {/* Image Container */}
         <div className="relative h-[400px] sm:h-[450px] image-zoom">
           <Image
-            src={imageUrl}
+            src={imageUrl || "/placeholder.svg"}
             alt={title}
             fill
             className="object-cover"
             priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1000px"
+            unoptimized
           />
           {/* Gradient Overlay */}
           <div className="absolute inset-0 gradient-overlay" />

@@ -30,11 +30,12 @@ export default function EditorsPickCard({
         {/* Image */}
         <div className="relative size-24 sm:size-28 rounded-lg overflow-hidden shrink-0 image-zoom">
           <Image
-            src={imageUrl}
+            src={imageUrl || "/placeholder.svg"}
             alt={title}
             fill
             className="object-cover"
             sizes="112px"
+            unoptimized
           />
         </div>
         

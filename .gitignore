@@ -53,3 +53,9 @@ next-env.d.ts
 # local-only admin tool (not deployed / not committed)
 /admin.local.html
 /admin.local.server.mjs
+
+# Local notes / logs (do not commit)
+CODEX-HANDOFF.md
+DEPLOY-NOTES.md
+firebase-debug.log
+logo/

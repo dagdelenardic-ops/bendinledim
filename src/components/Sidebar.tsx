@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const sidebarItems = [
   { href: "/", icon: "home", label: "Ana Sayfa" },
@@ -10,9 +11,9 @@ const sidebarItems = [
 ];
 
 const musicLinks = [
-  { href: "/etiket/yeni-albumler", icon: "album", label: "Yeni Albümler" },
-  { href: "/etiket/incelemeler", icon: "reviews", label: "İncelemeler" },
-  { href: "/etiket/roportajlar", icon: "mic", label: "Röportajlar" },
+  { href: "/kategori/yeni-albumler", icon: "album", label: "Yeni Albümler" },
+  { href: "/kategori/incelemeler", icon: "reviews", label: "İncelemeler" },
+  { href: "/kategori/roportajlar", icon: "mic", label: "Röportajlar" },
 ];
 
 export default function Sidebar() {
@@ -25,9 +26,14 @@ export default function Sidebar() {
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 px-6 pt-6 pb-4">
         <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-primary/30">
-          <span className="material-symbols-outlined text-primary text-[24px]">
-            album
-          </span>
+          <Image
+            src="/logo.png"
+            alt="Ben Dinledim"
+            width={44}
+            height={44}
+            className="h-10 w-10 object-contain"
+            priority
+          />
         </div>
         <div>
           <h1 className="text-lg font-bold leading-tight tracking-tight text-vintage-cream italic">

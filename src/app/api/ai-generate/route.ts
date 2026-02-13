@@ -15,12 +15,13 @@ const categoryMap: Record<string, string> = {
 };
 
 const categoryColors: Record<string, string> = {
-  "Yeni Albümler": "#8b5cf6",
-  "İncelemeler": "#ec4899",
-  "Röportajlar": "#3b82f6",
-  "Konserler": "#22c55e",
-  "Festival": "#f59e0b",
-  "Haberler": "#d97706",
+  // Palette: red / turquoise (avoid purple/pink/blue accents)
+  "Yeni Albümler": "#22d3ee",
+  "İncelemeler": "#ef4444",
+  "Röportajlar": "#0891b2",
+  "Konserler": "#fb7185",
+  "Festival": "#22d3ee",
+  "Haberler": "#b91c1c",
 };
 
 interface AIGeneratedArticle {

@@ -261,6 +261,7 @@ export default function RSSFeedPage() {
                         fill
                         className="object-cover"
                         sizes="192px"
+                        unoptimized
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = "none";
                         }}

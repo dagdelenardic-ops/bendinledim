@@ -4,7 +4,7 @@ import BottomNav from "@/components/BottomNav";
 import Sidebar from "@/components/Sidebar";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { timeAgo } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -19,9 +19,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 
   if (!tag) {
-    return {
-      title: "Etiket Bulunamadı | Ben Dinledim",
-    };
+    const category = await prisma.category.findUnique({ where: { slug } });
+    if (category) {
+      return {
+        title: `${category.name} | Ben Dinledim`,
+        description: `${category.name} kategorisindeki tüm müzik içerikleri.`,
+      };
+    }
+
+    return { title: "Etiket Bulunamadı | Ben Dinledim" };
   }
 
   return {
@@ -44,7 +50,11 @@ export default async function TagPage({ params }: Props) {
     },
   });
 
-  if (!tag) notFound();
+  if (!tag) {
+    const category = await prisma.category.findUnique({ where: { slug } });
+    if (category) redirect(`/kategori/${slug}`);
+    notFound();
+  }
 
   const articles = tag.articles
     .map((ta) => ta.article)
@@ -110,11 +120,12 @@ export default async function TagPage({ params }: Props) {
                   {/* Image */}
                   <div className="relative aspect-video image-zoom">
                     <Image
-                      src={article.imageUrl || "/placeholder.jpg"}
+                      src={article.imageUrl || "/placeholder.svg"}
                       alt={article.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      unoptimized
                     />
                     <div className="absolute top-3 left-3">
                       <span

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -11,13 +12,18 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 glass-nav">
-      <div className="flex items-center p-4 justify-between max-w-5xl mx-auto">
+      <div className="flex items-center p-4 justify-between max-w-6xl mx-auto">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-primary/30 group-hover:ring-primary/50 transition-all">
-            <span className="material-symbols-outlined text-primary text-[22px]">
-              album
-            </span>
+            <Image
+              src="/logo.png"
+              alt="Ben Dinledim"
+              width={40}
+              height={40}
+              className="h-9 w-9 object-contain"
+              priority
+            />
           </div>
           <div className="hidden sm:block">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-vintage-cream italic group-hover:text-primary transition-colors">

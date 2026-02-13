@@ -144,18 +144,17 @@ export default async function ArticlePage({ params }: Props) {
           </nav>
 
           {/* Hero Image */}
-          {article.imageUrl && (
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-white/5">
-              <Image
-                src={article.imageUrl}
-                alt={article.title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, 800px"
-              />
-            </div>
-          )}
+          <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-white/5">
+            <Image
+              src={article.imageUrl || "/placeholder.svg"}
+              alt={article.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, 800px"
+              unoptimized
+            />
+          </div>
 
           {/* Category & Meta */}
           <div className="flex flex-wrap items-center gap-3 mb-4">

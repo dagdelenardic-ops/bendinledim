@@ -24,16 +24,20 @@ export default function ArticleCard({
   excerpt,
 }: ArticleCardProps) {
   return (
-    <Link href={`/haber/${slug}`} className="flex-none w-72 snap-start group block">
+    <Link
+      href={`/haber/${slug}`}
+      className="flex-none w-72 lg:w-full snap-start group block"
+    >
       <article className="relative overflow-hidden rounded-xl bg-bg-card border border-white/5 card-hover">
         {/* Image */}
         <div className="relative aspect-video image-zoom">
           <Image
-            src={imageUrl}
+            src={imageUrl || "/placeholder.svg"}
             alt={title}
             fill
             className="object-cover"
             sizes="288px"
+            unoptimized
           />
           {/* Category Badge */}
           <div className="absolute top-3 left-3">

@@ -128,11 +128,12 @@ export default async function CategoryPage({ params }: Props) {
                   {/* Image */}
                   <div className="relative aspect-video image-zoom">
                     <Image
-                      src={article.imageUrl || "/placeholder.jpg"}
+                      src={article.imageUrl || "/placeholder.svg"}
                       alt={article.title}
                       fill
                       className="object-cover"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      unoptimized
                     />
                     {/* Category Badge */}
                     <div className="absolute top-3 left-3">

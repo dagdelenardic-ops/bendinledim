@@ -244,11 +244,12 @@ export default function AdminPage() {
                 {/* Image */}
                 <div className="relative aspect-video">
                   <Image
-                    src={article.imageUrl || "/placeholder.jpg"}
+                    src={article.imageUrl || "/placeholder.svg"}
                     alt={article.title}
                     fill
                     className="object-cover"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    unoptimized
                   />
                   {/* Status Badges */}
                   <div className="absolute top-3 left-3 flex gap-1.5">
