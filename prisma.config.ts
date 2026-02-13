@@ -9,7 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // Keep a sensible default so `prisma generate` works in build environments
+    // where DATABASE_URL isn't injected (ex: CI / App Hosting build step).
+    url: process.env["DATABASE_URL"] || "file:./dev.db",
   },
 });
-
