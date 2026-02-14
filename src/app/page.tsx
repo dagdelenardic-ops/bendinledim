@@ -16,6 +16,27 @@ export const metadata = {
     "Yabancı indie müzik dünyasından en güncel haberler, albüm incelemeleri, röportajlar ve keşfedilmeyi bekleyen sanatçılar.",
 };
 
+const ARTIST_HINTS = [
+  "Taylor Swift",
+  "Olivia Rodrigo",
+  "Arctic Monkeys",
+  "Phoebe Bridgers",
+  "Billie Eilish",
+  "boygenius",
+  "The National",
+  "Tame Impala",
+  "Wet Leg",
+];
+
+function artistKey(title: string) {
+  const t = String(title || "").toLowerCase();
+  for (const hint of ARTIST_HINTS) {
+    const h = hint.toLowerCase();
+    if (t.includes(h)) return h;
+  }
+  return extractQueryFromTitle(title).toLowerCase();
+}
+
 function dedupeFeed<T extends { title: string; slug: string; imageUrl: string | null }>(
   rows: T[],
   limit: number,
@@ -29,7 +50,7 @@ function dedupeFeed<T extends { title: string; slug: string; imageUrl: string | 
   const seenImages = opts?.seenImages || new Set<string>();
 
   for (const r of rows) {
-    const artist = extractQueryFromTitle(r.title).toLowerCase();
+    const artist = artistKey(r.title);
     const img = (r.imageUrl || "").split("?")[0];
 
     // Prefer variety: avoid repeating the same artist/topic and the same image.
@@ -77,7 +98,7 @@ export default async function Home() {
       ...(featured ? [featured.title] : []),
       ...editorsPicks.map((a) => a.title),
     ]
-      .map((t) => extractQueryFromTitle(t).toLowerCase())
+      .map((t) => artistKey(t))
       .filter(Boolean)
   );
   const homeSeenImages = new Set<string>(
