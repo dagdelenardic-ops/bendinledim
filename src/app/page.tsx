@@ -37,7 +37,7 @@ function artistKey(title: string) {
   return extractQueryFromTitle(title).toLowerCase();
 }
 
-function dedupeFeed<T extends { title: string; slug: string; imageUrl: string | null }>(
+function pickFeed<T extends { title: string; slug: string; imageUrl: string | null }>(
   rows: T[],
   limit: number,
   opts?: {
@@ -48,20 +48,32 @@ function dedupeFeed<T extends { title: string; slug: string; imageUrl: string | 
   const out: T[] = [];
   const seenArtists = opts?.seenArtists || new Set<string>();
   const seenImages = opts?.seenImages || new Set<string>();
+  const seenSlugs = new Set<string>();
 
-  for (const r of rows) {
-    const artist = artistKey(r.title);
-    const img = (r.imageUrl || "").split("?")[0];
+  const pass = (checkArtist: boolean, checkImage: boolean) => {
+    for (const r of rows) {
+      if (out.length >= limit) break;
+      if (seenSlugs.has(r.slug)) continue;
 
-    // Prefer variety: avoid repeating the same artist/topic and the same image.
-    if (artist && seenArtists.has(artist)) continue;
-    if (img && seenImages.has(img)) continue;
+      const artist = artistKey(r.title);
+      const img = (r.imageUrl || "").split("?")[0];
 
-    if (artist) seenArtists.add(artist);
-    if (img) seenImages.add(img);
-    out.push(r);
-    if (out.length >= limit) break;
-  }
+      if (checkArtist && artist && seenArtists.has(artist)) continue;
+      if (checkImage && img && seenImages.has(img)) continue;
+
+      if (artist) seenArtists.add(artist);
+      if (img) seenImages.add(img);
+      seenSlugs.add(r.slug);
+      out.push(r);
+    }
+  };
+
+  // 1) Strict: unique artist + unique image
+  pass(true, true);
+  // 2) Relax: allow same artist, still keep images unique
+  pass(false, true);
+  // 3) Relax fully: fill any remaining slots
+  pass(false, false);
 
   return out;
 }
@@ -90,7 +102,7 @@ export default async function Home() {
     }),
   ]);
 
-  const editorsPicks = dedupeFeed(editorsPicksRaw, 4);
+  const editorsPicks = pickFeed(editorsPicksRaw, 4);
 
   // Avoid repeating the same artist/image across sections.
   const homeSeenArtists = new Set<string>(
@@ -110,7 +122,7 @@ export default async function Home() {
       .filter(Boolean)
   );
 
-  const latestNews = dedupeFeed(latestNewsRaw, 8, {
+  const latestNews = pickFeed(latestNewsRaw, 8, {
     seenArtists: homeSeenArtists,
     seenImages: homeSeenImages,
   });
