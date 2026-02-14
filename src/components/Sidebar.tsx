@@ -16,6 +16,62 @@ const musicLinks = [
   { href: "/kategori/roportajlar", icon: "mic", label: "Röportajlar" },
 ];
 
+function SideButton({
+  href,
+  icon,
+  label,
+  active,
+}: {
+  href: string;
+  icon: string;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={[
+        "group flex items-center gap-3 px-4 py-3 rounded-2xl transition-all",
+        "border",
+        active
+          ? "bg-primary/15 border-primary/30 text-vintage-cream shadow-[0_18px_40px_-26px_rgba(239,68,68,0.55)]"
+          : "bg-bg-elevated/30 border-white/5 text-vintage-beige/65 hover:text-vintage-cream hover:bg-bg-elevated/55 hover:border-accent-turquoise/25",
+      ].join(" ")}
+    >
+      <span
+        className={[
+          "grid place-items-center size-9 rounded-xl border transition-all",
+          active
+            ? "bg-primary/20 border-primary/30 text-primary"
+            : "bg-bg-card/40 border-white/10 text-vintage-beige/55 group-hover:border-accent-turquoise/25 group-hover:text-accent-turquoise",
+        ].join(" ")}
+      >
+        <span
+          className="material-symbols-outlined text-[20px]"
+          style={active ? { fontVariationSettings: "'FILL' 1" } : {}}
+        >
+          {icon}
+        </span>
+      </span>
+
+      <span className={["text-sm", active ? "font-bold" : "font-medium"].join(" ")}>
+        {label}
+      </span>
+
+      <span
+        className={[
+          "ml-auto material-symbols-outlined text-[18px] transition-opacity",
+          active ? "opacity-70" : "opacity-0 group-hover:opacity-60",
+        ].join(" ")}
+        aria-hidden="true"
+      >
+        chevron_right
+      </span>
+    </Link>
+  );
+}
+
 export default function Sidebar() {
   const pathname = usePathname();
 
@@ -47,62 +103,34 @@ export default function Sidebar() {
       </Link>
 
       {/* Main Navigation */}
-      <nav className="flex flex-col gap-1 px-3 py-4">
-        <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-vintage-beige/40 mb-2">
+      <nav className="flex flex-col gap-2 px-3 py-4">
+        <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-vintage-beige/35 mb-1">
           Menü
         </p>
         {sidebarItems.map((item) => (
-          <Link
+          <SideButton
             key={item.href}
             href={item.href}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-              pathname === item.href
-                ? "bg-primary/15 text-primary"
-                : "text-vintage-beige/60 hover:bg-white/5 hover:text-vintage-cream"
-            }`}
-          >
-            <span
-              className="material-symbols-outlined text-[22px]"
-              style={
-                pathname === item.href
-                  ? { fontVariationSettings: "'FILL' 1" }
-                  : {}
-              }
-            >
-              {item.icon}
-            </span>
-            <span className="text-sm font-medium">{item.label}</span>
-          </Link>
+            icon={item.icon}
+            label={item.label}
+            active={pathname === item.href}
+          />
         ))}
       </nav>
 
       {/* Music Categories */}
-      <nav className="flex flex-col gap-1 px-3 py-4 border-t border-white/5">
-        <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-vintage-beige/40 mb-2">
+      <nav className="flex flex-col gap-2 px-3 py-4 border-t border-white/5">
+        <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-vintage-beige/35 mb-1">
           Müzik
         </p>
         {musicLinks.map((item) => (
-          <Link
+          <SideButton
             key={item.href}
             href={item.href}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-              pathname === item.href
-                ? "bg-primary/15 text-primary"
-                : "text-vintage-beige/60 hover:bg-white/5 hover:text-vintage-cream"
-            }`}
-          >
-            <span
-              className="material-symbols-outlined text-[22px]"
-              style={
-                pathname === item.href
-                  ? { fontVariationSettings: "'FILL' 1" }
-                  : {}
-              }
-            >
-              {item.icon}
-            </span>
-            <span className="text-sm font-medium">{item.label}</span>
-          </Link>
+            icon={item.icon}
+            label={item.label}
+            active={pathname === item.href}
+          />
         ))}
       </nav>
 
