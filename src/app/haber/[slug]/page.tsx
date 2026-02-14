@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 import Sidebar from "@/components/Sidebar";
 import CommentSection from "@/components/CommentSection";
+import ShareButton from "@/components/ShareButton";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -237,27 +238,16 @@ export default async function ArticlePage({ params }: Props) {
           {/* Share Section */}
           <div className="flex items-center gap-3 mb-8 pt-6 border-t border-white/10">
             <span className="text-sm text-vintage-beige/50">Paylaş:</span>
-            <button
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({
-                    title: article.title,
-                    url: `https://bendinledim.com/haber/${article.slug}`,
-                  });
-                }
-              }}
+            <ShareButton
+              title={article.title}
+              url={absUrl(`/haber/${article.slug}`)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-primary/20 text-vintage-beige hover:text-primary transition-colors text-xs"
-            >
-              <span className="material-symbols-outlined text-[16px]">
-                share
-              </span>
-              Paylaş
-            </button>
+            />
             <a
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                 article.title
               )}&url=${encodeURIComponent(
-                `https://bendinledim.com/haber/${article.slug}`
+                absUrl(`/haber/${article.slug}`)
               )}`}
               target="_blank"
               rel="noopener noreferrer"
