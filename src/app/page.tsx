@@ -18,11 +18,15 @@ export const metadata = {
 
 function dedupeFeed<T extends { title: string; slug: string; imageUrl: string | null }>(
   rows: T[],
-  limit: number
+  limit: number,
+  opts?: {
+    seenArtists?: Set<string>;
+    seenImages?: Set<string>;
+  }
 ) {
   const out: T[] = [];
-  const seenArtists = new Set<string>();
-  const seenImages = new Set<string>();
+  const seenArtists = opts?.seenArtists || new Set<string>();
+  const seenImages = opts?.seenImages || new Set<string>();
 
   for (const r of rows) {
     const artist = extractQueryFromTitle(r.title).toLowerCase();
@@ -57,15 +61,38 @@ export default async function Home() {
       take: 32,
     }),
     prisma.article.findMany({
-      where: { published: true, editorsPick: true },
+      // Editors pick cards shouldn't repeat the hero item.
+      where: { published: true, editorsPick: true, featured: false },
       include: { category: true },
       orderBy: { createdAt: "desc" },
       take: 16,
     }),
   ]);
 
-  const latestNews = dedupeFeed(latestNewsRaw, 8);
   const editorsPicks = dedupeFeed(editorsPicksRaw, 4);
+
+  // Avoid repeating the same artist/image across sections.
+  const homeSeenArtists = new Set<string>(
+    [
+      ...(featured ? [featured.title] : []),
+      ...editorsPicks.map((a) => a.title),
+    ]
+      .map((t) => extractQueryFromTitle(t).toLowerCase())
+      .filter(Boolean)
+  );
+  const homeSeenImages = new Set<string>(
+    [
+      ...(featured?.imageUrl ? [featured.imageUrl] : []),
+      ...editorsPicks.map((a) => a.imageUrl || ""),
+    ]
+      .map((u) => String(u || "").split("?")[0])
+      .filter(Boolean)
+  );
+
+  const latestNews = dedupeFeed(latestNewsRaw, 8, {
+    seenArtists: homeSeenArtists,
+    seenImages: homeSeenImages,
+  });
 
   // JSON-LD structured data for the page
   const structuredData = {
