@@ -21,7 +21,7 @@ export default function FeaturedArticle({
   author,
   readTime,
   category,
-  categoryColor = "#d97706",
+  categoryColor = "#22d3ee",
 }: FeaturedArticleProps) {
   return (
     <Link href={`/haber/${slug}`} className="block group">

@@ -15,13 +15,13 @@ export default function Header() {
       <div className="flex items-center p-4 justify-between max-w-6xl mx-auto">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-primary/30 group-hover:ring-primary/50 transition-all">
+          <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-bg-elevated/60 ring-1 ring-accent-turquoise/25 group-hover:ring-accent-turquoise/45 transition-all">
             <Image
-              src="/logo.png"
+              src="/logo-mark.png"
               alt="Ben Dinledim"
-              width={40}
-              height={40}
-              className="h-9 w-9 object-contain"
+              width={32}
+              height={32}
+              className="h-8 w-8 object-contain"
               priority
             />
           </div>

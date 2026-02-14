@@ -8,6 +8,7 @@ import EditorsPickCard from "@/components/EditorsPickCard";
 import Link from "next/link";
 import Script from "next/script";
 import { absUrl } from "@/lib/site";
+import { extractQueryFromTitle } from "@/lib/commonsImages";
 
 export const metadata = {
   title: "Ben Dinledim | Indie Müzik Blogu",
@@ -15,26 +16,56 @@ export const metadata = {
     "Yabancı indie müzik dünyasından en güncel haberler, albüm incelemeleri, röportajlar ve keşfedilmeyi bekleyen sanatçılar.",
 };
 
+function dedupeFeed<T extends { title: string; slug: string; imageUrl: string | null }>(
+  rows: T[],
+  limit: number
+) {
+  const out: T[] = [];
+  const seenArtists = new Set<string>();
+  const seenImages = new Set<string>();
+
+  for (const r of rows) {
+    const artist = extractQueryFromTitle(r.title).toLowerCase();
+    const img = (r.imageUrl || "").split("?")[0];
+
+    // Prefer variety: avoid repeating the same artist/topic and the same image.
+    if (artist && seenArtists.has(artist)) continue;
+    if (img && seenImages.has(img)) continue;
+
+    if (artist) seenArtists.add(artist);
+    if (img) seenImages.add(img);
+    out.push(r);
+    if (out.length >= limit) break;
+  }
+
+  return out;
+}
+
 export default async function Home() {
-  const [featured, latestNews, editorsPicks] = await Promise.all([
+  const [featured, latestNewsRaw, editorsPicksRaw] = await Promise.all([
     prisma.article.findFirst({
       where: { published: true, featured: true },
       include: { category: true },
       orderBy: { createdAt: "desc" },
     }),
     prisma.article.findMany({
-      where: { published: true, featured: false },
+      // Avoid showing the same items both in "Son Haberler" and "Editörün Seçimi".
+      where: { published: true, featured: false, editorsPick: false },
       include: { category: true },
       orderBy: { createdAt: "desc" },
-      take: 8,
+      // Fetch extra then de-dupe to avoid "same-looking" cards.
+      take: 32,
     }),
     prisma.article.findMany({
       where: { published: true, editorsPick: true },
       include: { category: true },
       orderBy: { createdAt: "desc" },
-      take: 4,
+      take: 16,
     }),
   ]);
+
+  const latestNews = dedupeFeed(latestNewsRaw, 8);
+  const editorsPicks = dedupeFeed(editorsPicksRaw, 4);
 
   // JSON-LD structured data for the page
   const structuredData = {

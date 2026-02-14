@@ -113,7 +113,7 @@ body {
 .prose-article p {
   margin-bottom: 1.25rem;
   line-height: 1.9;
-  color: rgba(168, 165, 184, 0.9);
+  color: rgba(255, 255, 255, 0.76);
   font-size: 1.05rem;
 }
 
@@ -122,8 +122,8 @@ body {
   padding-left: 1.25rem;
   margin: 2rem 0;
   font-style: italic;
-  color: rgba(168, 165, 184, 0.8);
-  background: rgba(217, 119, 6, 0.05);
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(34, 211, 238, 0.07);
   padding: 1rem 1.25rem;
   border-radius: 0 0.5rem 0.5rem 0;
 }
@@ -147,7 +147,7 @@ body {
 
 .prose-article li {
   margin-bottom: 0.5rem;
-  color: rgba(168, 165, 184, 0.9);
+  color: rgba(255, 255, 255, 0.76);
 }
 
 /* Gradient text */

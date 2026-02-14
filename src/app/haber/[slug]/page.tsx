@@ -251,7 +251,7 @@ export default async function ArticlePage({ params }: Props) {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-[#1DA1F2]/20 text-vintage-beige hover:text-[#1DA1F2] transition-colors text-xs"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-accent-turquoise/15 text-vintage-beige hover:text-accent-turquoise transition-colors text-xs"
             >
               <span className="material-symbols-outlined text-[16px]">
                 open_in_new

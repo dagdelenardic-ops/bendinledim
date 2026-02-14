@@ -19,7 +19,7 @@ export default function EditorsPickCard({
   slug,
   imageUrl,
   category,
-  categoryColor = "#d97706",
+  categoryColor = "#22d3ee",
   author,
   readTime,
   excerpt,

@@ -25,13 +25,13 @@ export default function Sidebar() {
     <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 flex-col bg-bg-card/50 border-r border-white/5 z-40">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 px-6 pt-6 pb-4">
-        <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-primary/30">
+        <div className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-bg-elevated/60 ring-1 ring-accent-turquoise/25">
           <Image
-            src="/logo.png"
+            src="/logo-mark.png"
             alt="Ben Dinledim"
-            width={44}
-            height={44}
-            className="h-10 w-10 object-contain"
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain"
             priority
           />
         </div>

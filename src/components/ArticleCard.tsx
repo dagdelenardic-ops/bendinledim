@@ -19,7 +19,7 @@ export default function ArticleCard({
   slug,
   imageUrl,
   category,
-  categoryColor = "#d97706",
+  categoryColor = "#22d3ee",
   createdAt,
   excerpt,
 }: ArticleCardProps) {
