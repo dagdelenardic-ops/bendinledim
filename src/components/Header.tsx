@@ -23,6 +23,7 @@ export default function Header() {
               height={32}
               className="h-8 w-8 object-contain"
               priority
+              unoptimized
             />
           </div>
           <div className="hidden sm:block">

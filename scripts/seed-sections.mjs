@@ -20,15 +20,6 @@ function slugify(text) {
     .replace(/(^-|-$)/g, "");
 }
 
-function ensureUniqueSlug(db, baseSlug) {
-  let slug = baseSlug;
-  let counter = 2;
-  while (db.prepare("select 1 from Article where slug = ?").get(slug)) {
-    slug = `${baseSlug}-${counter++}`;
-  }
-  return slug;
-}
-
 function upsertCategory(db, c) {
   const existing = db.prepare("select id from Category where id = ?").get(c.id);
   if (existing) {
@@ -102,7 +93,7 @@ function main() {
     { id: "cat1", name: "Yeni Albümler", nameEn: "New Albums", slug: "yeni-albumler", color: "#22d3ee" },
     { id: "cat2", name: "İncelemeler", nameEn: "Reviews", slug: "incelemeler", color: "#ef4444" },
     { id: "cat3", name: "Röportajlar", nameEn: "Interviews", slug: "roportajlar", color: "#0891b2" },
-    { id: "cat4", name: "Konserler", nameEn: "Concerts", slug: "konserler", color: "#fb7185" },
+    { id: "cat4", name: "Konserler", nameEn: "Concerts", slug: "konserler", color: "#ef4444" },
     { id: "cat5", name: "Festival", nameEn: "Festival", slug: "festival", color: "#22d3ee" },
     { id: "cat6", name: "Haberler", nameEn: "News", slug: "haberler", color: "#b91c1c" },
     // Not in generator map but used in UI quick links.
@@ -115,6 +106,160 @@ function main() {
   tx();
 
   const articles = [];
+
+  // New albums (variety for homepage + category pages)
+  articles.push({
+    title: "Fontaines D.C.'den Sert Dönüş: Skinty Fia",
+    slug: "fontaines-dc-skinty-fia",
+    excerpt:
+      "Fontaines D.C., “Skinty Fia” ile post-punk enerjisini karanlık bir atmosfer ve daha geniş bir anlatıyla birleştiriyor.",
+    content: [
+      "Fontaines D.C., “Skinty Fia” ile ilk bakışta tanıdık bir motoru çalıştırıyor: keskin gitarlar, ritimde inatçı bir yürüyüş ve öne çıkan bir vokal. Ama albüm ilerledikçe, grubun yalnızca “hızlı ve sert” bir post-punk formülüne yaslanmadığı açıkça hissediliyor.",
+      "Düzenlemelerdeki en güçlü hamle, sahnenin sürekli ‘dar’ tutulmaması. Parçalar, bazı bölümlerde neredeyse kulak hizasında sertleşirken, bazı anlarda geri çekilip atmosfere alan açıyor. Bu sayede albüm, tek bir duyguya kilitlenmek yerine, gri tonların içinde dolaşabilen bir anlatı kuruyor.",
+      "Vokal tarafında ise konuşur gibi ama asla düzleşmeyen bir ifade var. Bu ifade, sözlerdeki yabancılık ve gerilim hissiyle birleştiğinde albümün ana karakterini belirliyor. “Skinty Fia”, bir yandan ritimle sürüklüyor, diğer yandan dinleyiciyi sürekli tetikte tutuyor.",
+      "Sonuç olarak albüm, Fontaines D.C.’nin ‘yüksek enerji’ tarafını korurken ses paletini genişlettiği bir dönemeç. Kısa sürede tüketilecek bir tekleme değil; tekrar dinledikçe detay veren, karanlık ama canlı bir kayıt.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 6,
+  });
+
+  articles.push({
+    title: "Black Country, New Road'un Duygusal Zirvesi: Ants From Up There",
+    slug: "black-country-new-road-ants-from-up-there",
+    excerpt:
+      "Black Country, New Road; kırılgan anlatımı, büyük düzenlemelerle büyüten bir albümle modern art-rock’ın sınırlarını zorluyor.",
+    content: [
+      "“Ants From Up There”, Black Country, New Road’un dramatik anlatısını büyütürken, dinleyiciyi de o duygusal yoğunluğun içine çeken bir albüm. Parçalar, sadece ritim ve gitar üzerinden değil; dinamik geçişler, enstrüman katmanları ve sahne gibi kurgulanan bölümler üzerinden ilerliyor.",
+      "Albümün gücü, iniş çıkışların ‘rastgele’ değil, çok kontrollü olması. Sessiz bir anın ardından gelen yükseliş, sadece sesin artması değil; hikayenin yeni bir noktaya taşınması gibi hissettiriyor. Bu da albümü bir şarkılar toplamından çok, tek bir uzun anlatı gibi dinlettiriyor.",
+      "Aranjmanlarda yaylı hissi veren dokular, piyanonun ritimle kurduğu ilişki ve yer yer patlayan gitarlar dikkat çekiyor. Bu çeşitlilik, albümün her parçada farklı bir yüz göstermesini sağlıyor; ama karakter bütünlüğü hiç kaybolmuyor.",
+      "“Ants From Up There”, sabır isteyen bir dinleme. Fakat o sabrı ödüllendiriyor: her dönüşte başka bir cümle, başka bir motif ve başka bir duygu katmanı yakalanıyor. Modern indie/art-rock içinde, ‘büyük albüm’ hissini gerçekten taşıyan işlerden biri.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 7,
+  });
+
+  articles.push({
+    title: "Lana Del Rey'in Yeni Anlatısı: Ocean Blvd ile Büyük Resim",
+    slug: "lana-del-rey-ocean-blvd",
+    excerpt:
+      "Lana Del Rey, “Ocean Blvd” döneminde şarkı yazımını daha açık, daha kişisel ve daha sinematik bir çizgiye taşıyor.",
+    content: [
+      "Lana Del Rey’in son dönem işleri, büyük prodüksiyon jestlerinden çok, metnin ve melodinin ağırlığına yaslanıyor. “Ocean Blvd” yaklaşımı da bu çizgiyi sürdürüyor: şarkıların merkezinde anlatı var, aranjmanlar ise bu anlatıya alan açacak şekilde kuruluyor.",
+      "Albümün en belirgin yanı, sahnenin ‘geniş’ olması. Piyano ve yaylı dokular, bazı parçalarda neredeyse bir film müziği hissi yaratıyor. Fakat bu sinematik etki, abartılı bir dramatizm yerine, kontrollü bir gerilimle ilerliyor.",
+      "Sözlerde ise daha az maske, daha fazla doğrudanlık var. Bu doğrudanlık, albümün temposunu yavaşlatıyor gibi görünse de, duyguyu yoğunlaştırıyor. Birkaç cümleyle kurulan sahneler, dinleyicinin aklında uzun süre kalıyor.",
+      "“Ocean Blvd”, hızlı tüketim için yazılmış bir albüm değil. Daha çok, aynı hikayeye farklı zamanlarda dönmek gibi. Lana Del Rey’in anlatıcı tarafını sevenler için güçlü bir durak; yeni dinleyiciler içinse ‘yavaş açılan’ ama derin bir giriş.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 7,
+  });
+
+  articles.push({
+    title: "Mitski'nin Yeni Dönemi: The Land Is Inhospitable ve Kısa Vuruşlar",
+    slug: "mitski-the-land-is-inhospitable",
+    excerpt:
+      "Mitski, daha sade bir anlatı kurarken duyguyu küçültmüyor; aksine kısa ve net şarkılarla daha keskin bir etki yaratıyor.",
+    content: [
+      "Mitski’nin yeni döneminde dikkat çeken şey, şarkıların ‘az sözle çok şey’ söylemesi. “The Land Is Inhospitable” yaklaşımı, büyük prodüksiyon numaralarına yaslanmadan, küçük melodik kararlarla duyguyu büyütüyor.",
+      "Parçalar genellikle kısa, ama bu kısalık acelecilik değil. Tam tersine, şarkıların gereksiz dolaşmadan hedefe gittiği bir ekonomi var. Nakaratların yerleşimi, sözlerin ritmi ve enstrümanların boşluk bırakması; her şeyi daha net hale getiriyor.",
+      "Albümün genel hissi, bir “yorgunluk” ya da “kabulleniş” duygusuna yakın. Ancak bu duygu karanlığa saplanmıyor; yer yer ışık alan, yer yer gölgeye kayan bir ton var. Bu ton, Mitski’nin anlatıcı gücünü bir kez daha öne çıkarıyor.",
+      "Sonuç: “The Land Is Inhospitable”, büyük anlar yerine küçük vuruşlarla etkileyen bir albüm. Sade gibi görünen ama tekrar dinledikçe ayrıntı veren bir iş; özellikle söz odaklı dinleyici için çok güçlü.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 6,
+  });
+
+  articles.push({
+    title: "Sufjan Stevens'in Dönüşü: Javelin ile İçe Dönük Zarafet",
+    slug: "sufjan-stevens-javelin",
+    excerpt:
+      "Sufjan Stevens, “Javelin” ile minimal dokuları duygusal bir merkezle birleştiriyor: sessiz ama güçlü bir geri dönüş.",
+    content: [
+      "Sufjan Stevens albümleri çoğu zaman ‘kısık sesle konuşan’ ama uzun süre akılda kalan işler. “Javelin” de bu geleneği sürdürüyor: düzenlemeler çok kalabalık değil, ancak her katman doğru yerde durduğu için parçalar geniş bir alan hissi taşıyor.",
+      "Albümün omurgası, melodik kırılmalar ve küçük ritmik hareketler. Şarkılar, büyük patlamalar yerine yavaşça büyüyor; bir akor değişimi ya da küçük bir synth dokusu bile anlatının yönünü değiştirebiliyor.",
+      "Sözlerdeki içe dönüklük, albümün temposunu belirliyor. Bu tempo ‘yavaş’ olabilir, ama durağan değil. Aksine, duygunun adım adım ilerlediği bir yürüyüş gibi. Dinleyici, şarkıların içinde kaybolmak yerine, onlarla birlikte yol alıyor.",
+      "“Javelin”, yoğun bir günün sonunda iyi gelen bir albüm: kulaklıkla dinlendiğinde detayları ortaya çıkan, sakin kaldıkça güçlenen bir kayıt. Sufjan’ın üretiminde önemli bir durak olarak anılacak işler arasında.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 7,
+  });
+
+  articles.push({
+    title: "Paramore'un Yeniden Doğuşu: This Is Why ile Net Bir Çizgi",
+    slug: "paramore-this-is-why",
+    excerpt:
+      "Paramore, “This Is Why” ile pop punk geçmişini inkâr etmeden daha olgun ve ritim odaklı bir sound’a geçiyor.",
+    content: [
+      "Paramore, “This Is Why” döneminde enerjiyi sadece hızdan değil, groove’dan da alıyor. Gitarların sertliği yerinde dururken, ritim bölümünün daha ‘oynak’ çalıştığı anlar albümün yeni karakterini belirliyor.",
+      "Albümün güçlü yanı, pop punk refleksini koruyup daha geniş bir dinleyici kulağına hitap edebilmesi. Nakaratlar hâlâ akılda kalıcı; ama düzenlemeler, tek bir formülün etrafında dönmüyor. Parçalar, küçük prodüksiyon hamleleriyle farklı yerlere açılıyor.",
+      "Vokal tarafında Hayley Williams’ın kontrolü ve esnekliği albümün taşıyıcısı. Yüksek enerjili anlarda bile hikâye ‘dağılmıyor’; çünkü vokal çizgisi, şarkıyı toparlayan bir omurga gibi çalışıyor.",
+      "“This Is Why”, Paramore’un nostaljiye sıkışmadan büyüdüğünü gösteren bir albüm: hem eski dinleyiciye göz kırpıyor, hem de yeni bir sayfa açıyor.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 6,
+  });
+
+  articles.push({
+    title: "Caroline Polachek'in Sınır Tanımayan Pop'u: Desire, I Want to Turn Into You",
+    slug: "caroline-polachek-desire-i-want-to-turn-into-you",
+    excerpt:
+      "Caroline Polachek, art-pop ile elektronik dokuları risk almaktan korkmadan birleştiriyor; albüm, sürekli sürprizli bir akış sunuyor.",
+    content: [
+      "Caroline Polachek albümlerinde en heyecan verici şey, ‘tür’ fikrinin sabit kalmaması. “Desire, I Want to Turn Into You” da bu yaklaşımı sürdürüyor: bir parça elektronik pop’a yaslanırken, bir diğeri neredeyse folk dokusuna yaklaşabiliyor.",
+      "Aranjmanlar çoğu zaman katman katman büyüyor; ama kalabalıklaşmıyor. Çünkü her sesin sahnede bir yeri var. Bu düzenleme disiplini, albümün ‘deneysel’ tarafını erişilebilir kılıyor.",
+      "Vokal performansı albümün en güçlü yüzü: bazen keskin, bazen kırılgan, bazen de çok parlak. Bu değişkenlik, parçaların ruhunu tek bir renge hapsetmiyor.",
+      "Genel olarak bu albüm, art-pop dinleyicisi için büyük bir tatmin. Her dinleyişte yeni bir detay yakalanacak kadar zengin, ama akışı bozmayacak kadar dengeli.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 7,
+  });
+
+  articles.push({
+    title: "Blur'dan Sakin ve Keskin Bir Dönüş: The Ballad of Darren",
+    slug: "blur-the-ballad-of-darren",
+    excerpt:
+      "Blur, “The Ballad of Darren” ile yüksek gürültü yerine olgun bir melankoli kuruyor; şarkılar basit ama etkili.",
+    content: [
+      "Blur’un geri dönüş albümü, bir “büyük patlama” değil; daha çok sessiz bir yürüyüş. “The Ballad of Darren”, yaş almış bir grubun hâlâ şarkı yazımında ne kadar güçlü olabileceğini gösteriyor.",
+      "Düzenlemeler çoğunlukla sade. Bu sadelik, Damon Albarn’ın anlatısını öne çıkarıyor. Parçalar, küçük melodik kararlarla büyüyor; büyük prodüksiyon gösterileri yerine sözlerin ve armonilerin taşıdığı bir ağırlık var.",
+      "Albüm, Britpop nostaljisine yaslanmıyor. Bunun yerine, bugünkü hâlini kabul eden bir ton taşıyor. Bu ton, dinleyicide daha ‘yakın’ bir duygu bırakıyor.",
+      "“The Ballad of Darren”, hızlı tüketilecek bir albüm değil; ama tekrar dinledikçe iyi gelen, olgun bir iş. Blur diskografisinde sakin ama kalıcı bir yere oturuyor.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 6,
+  });
+
+  articles.push({
+    title: "Wednesday'nin Gürültülü Zarafeti: Rat Saw God",
+    slug: "wednesday-rat-saw-god",
+    excerpt:
+      "Wednesday, gürültülü gitarları country dokusuyla yan yana getirip 90'lar indie ruhunu bugüne taşıyor.",
+    content: [
+      "“Rat Saw God”, Wednesday’nin ‘kirli ama melodik’ çizgisini daha görünür kılan bir albüm. Gitarlar çoğu zaman önde ve gürültülü; fakat şarkıların içinde küçük country dokuları ve hikâye anlatımı da var.",
+      "Albümün güçlü yanı, zıtlıkları aynı sahnede tutabilmesi. Bir anda sert bir patlama duyarken, hemen ardından sakin bir cümleyle geri çekiliyor. Bu iniş çıkışlar, albüme canlı bir ritim kazandırıyor.",
+      "Vokal anlatımı çok ‘yakın’: sanki bir hikâyeyi masada anlatıyormuş gibi. Bu yakınlık, gürültülü anları daha da etkili kılıyor; çünkü dinleyici şarkıya yabancı kalmıyor.",
+      "“Rat Saw God”, indie rock içinde hem nostaljik hem de taze hisseden bir iş. Gürültü seven ama iyi melodiden vazgeçmeyen dinleyici için tam yerinde.",
+    ].join("\n\n"),
+    categoryId: "cat1",
+    published: true,
+    imageUrl: null,
+    readTime: 6,
+  });
 
   // Reviews
   articles.push({
@@ -332,16 +477,64 @@ function main() {
   let inserted = 0;
   const insertTx = db.transaction(() => {
     for (const a of articles) {
-      const baseSlug = slugify(a.slug || a.title);
-      const slug = ensureUniqueSlug(db, baseSlug);
+      const slug = slugify(a.slug || a.title);
       const didInsert = insertArticleIfMissing(db, { ...a, slug });
       if (didInsert) inserted++;
     }
   });
   insertTx();
 
+  // De-dupe / normalize seed content so homepage isn't repetitive.
+  // Safe to run multiple times: it only flips flags on known slugs.
+  const normalizeTx = db.transaction(() => {
+    // Reset flags so we can re-assign a clean, diverse homepage set.
+    db.prepare("update Article set featured = 0").run();
+    db.prepare("update Article set editorsPick = 0").run();
+
+    // Remove duplicated/near-duplicate seed posts (kept in DB but unpublished).
+    const unpublish = [
+      // Taylor duplicates
+      "taylor-swift-in-indie-folk-donusu-folklore-ve-evermore",
+      "taylor-swift-in-folk-donusumu-folklore-ve-evermore",
+      "taylor-swift-in-folk-muzige-donusu-buyuluyor",
+      "taylor-swift-indie-sulara-yelken-aciyor-folklore-ve-evermore-i-le-donusum",
+      "taylor-swift-in-indie-donusumu-folklore-ve-evermore-ile-yeni-bir-cag",
+      // Arctic Monkeys duplicates
+      "arctic-monkeys-ten-yeni-harika-the-car",
+      "arctic-monkeys-ten-yeni-donem-the-car-2022",
+      "arctic-monkeys-ten-yeni-lezzet-the-car",
+      "arctic-monkeys-ten-yeni-saheser-the-car",
+      "arktik-maymunlar-geri-donuyor-the-car-ile-caz-ve-funk-estetigi-kesfi",
+      "arctic-monkeys-the-car-caz-dokunuslariyla-bir-donum-noktasi",
+      // Olivia duplicates
+      "olivia-rodrigo-nun-muzik-dunyasindaki-buyuk-cikisi-sour",
+      "olivia-rodrigo-dan-rekor-kiran-cikis-sour",
+    ];
+    const unpub = db.prepare(
+      "update Article set published = 0, featured = 0, editorsPick = 0 where slug = ?"
+    );
+    for (const slug of unpublish) unpub.run(slug);
+
+    // Featured (hero): keep exactly one.
+    db.prepare("update Article set featured = 1 where slug = ?").run(
+      "fontaines-dc-skinty-fia"
+    );
+
+    // Editors' picks: 4 items, different artists/categories.
+    const picks = [
+      "wet-leg-wet-leg-inceleme",
+      "roportaj-phoebe-bridgers-minimalizm-maksimum-duygu",
+      "the-national-first-two-pages-of-frankenstein-inceleme",
+      "sufjan-stevens-javelin",
+    ];
+    const pick = db.prepare(
+      "update Article set editorsPick = 1 where slug = ? and published = 1"
+    );
+    for (const slug of picks) pick.run(slug);
+  });
+  normalizeTx();
+
   console.log(`seed-sections: inserted ${inserted} article(s).`);
 }
 
 main();
-

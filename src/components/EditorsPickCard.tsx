@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 
 interface EditorsPickCardProps {
   title: string;
@@ -29,8 +29,8 @@ export default function EditorsPickCard({
       <article className="flex gap-4 items-start p-4 rounded-xl bg-bg-card/50 border border-white/5 hover:border-primary/20 hover:bg-bg-card transition-all">
         {/* Image */}
         <div className="relative size-24 sm:size-28 rounded-lg overflow-hidden shrink-0 image-zoom">
-          <Image
-            src={imageUrl || "/placeholder.svg"}
+          <SafeImage
+            src={imageUrl}
             alt={title}
             fill
             className="object-cover"

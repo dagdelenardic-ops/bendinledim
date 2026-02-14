@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { timeAgo } from "@/lib/utils";
+import SafeImage from "@/components/SafeImage";
 
 interface ArticleCardProps {
   title: string;
@@ -31,8 +31,8 @@ export default function ArticleCard({
       <article className="relative overflow-hidden rounded-xl bg-bg-card border border-white/5 card-hover">
         {/* Image */}
         <div className="relative aspect-video image-zoom">
-          <Image
-            src={imageUrl || "/placeholder.svg"}
+          <SafeImage
+            src={imageUrl}
             alt={title}
             fill
             className="object-cover"

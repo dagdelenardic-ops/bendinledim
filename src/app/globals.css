@@ -3,7 +3,7 @@
 @theme inline {
   /* Palette: black / red / white / turquoise */
   --color-primary: #ef4444;        /* red */
-  --color-primary-light: #fb7185;  /* rose */
+  --color-primary-light: #f87171;  /* light red */
   --color-primary-dark: #b91c1c;   /* dark red */
   --color-accent-turquoise: #22d3ee;
   --color-accent-turquoise-dark: #0891b2;

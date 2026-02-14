@@ -53,6 +53,8 @@ function normalizeQuery(query) {
   if (!q) return q;
   // Handle a few known Turkish-to-English band name translations.
   if (/^Arktik Maymunlar/i.test(q)) return "Arctic Monkeys";
+  if (/^Blur$/i.test(q)) return "Blur band live";
+  if (/^Wednesday$/i.test(q)) return "Wednesday band";
   // If the title starts with a known artist, keep the artist name only.
   for (const artist of [
     "Taylor Swift",

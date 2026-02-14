@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 
 interface FeaturedArticleProps {
   title: string;
@@ -28,8 +28,8 @@ export default function FeaturedArticle({
       <article className="relative overflow-hidden rounded-2xl bg-bg-card shadow-2xl border border-white/5 card-hover">
         {/* Image Container */}
         <div className="relative h-[400px] sm:h-[450px] image-zoom">
-          <Image
-            src={imageUrl || "/placeholder.svg"}
+          <SafeImage
+            src={imageUrl}
             alt={title}
             fill
             className="object-cover"

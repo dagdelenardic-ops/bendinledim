@@ -120,7 +120,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "Ben Dinledim",
-              url: "https://bendinledim.com",
+              url: siteUrlNoSlash,
               description:
                 "Yabancı indie müzik dünyasından en güncel haberler ve albüm incelemeleri",
               inLanguage: "tr-TR",

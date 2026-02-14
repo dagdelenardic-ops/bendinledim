@@ -17,6 +17,8 @@ function normalizeQuery(query: string) {
 
   // Handle a few common Turkish-to-English translations / variations.
   if (/^Arktik Maymunlar/i.test(q)) return "Arctic Monkeys";
+  if (/^Blur$/i.test(q)) return "Blur band live";
+  if (/^Wednesday$/i.test(q)) return "Wednesday band";
 
   // If the query starts with a known artist, keep the artist name only.
   for (const artist of [
@@ -95,7 +97,7 @@ async function commonsSearch(query: string, limit = 6): Promise<CommonsSearchHit
     signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) return [];
-  const data = (await res.json()) as any;
+  const data = (await res.json()) as { query?: { search?: unknown } };
   const hits = data?.query?.search;
   if (!Array.isArray(hits)) return [];
   return hits as CommonsSearchHit[];
@@ -121,11 +123,10 @@ async function commonsImageInfo(
     signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) return {};
-  const data = (await res.json()) as any;
-  return (data?.query?.pages || {}) as Record<
-    string,
-    { title?: string; imageinfo?: CommonsImageInfo[] }
-  >;
+  const data = (await res.json()) as { query?: { pages?: unknown } };
+  const pages = data?.query?.pages;
+  if (!pages || typeof pages !== "object") return {};
+  return pages as Record<string, { title?: string; imageinfo?: CommonsImageInfo[] }>;
 }
 
 export async function fetchCommonsImageUrl(query: string) {
@@ -186,4 +187,3 @@ export async function pickArticleImageUrl(input: {
 
   return null;
 }
-

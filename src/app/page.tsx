@@ -26,6 +26,15 @@ const ARTIST_HINTS = [
   "The National",
   "Tame Impala",
   "Wet Leg",
+  "Fontaines D.C.",
+  "Black Country, New Road",
+  "Lana Del Rey",
+  "Mitski",
+  "Sufjan Stevens",
+  "Paramore",
+  "Caroline Polachek",
+  "Blur",
+  "Wednesday",
 ];
 
 function artistKey(title: string) {
@@ -43,12 +52,14 @@ function pickFeed<T extends { title: string; slug: string; imageUrl: string | nu
   opts?: {
     seenArtists?: Set<string>;
     seenImages?: Set<string>;
+    allowAny?: boolean;
   }
 ) {
   const out: T[] = [];
   const seenArtists = opts?.seenArtists || new Set<string>();
   const seenImages = opts?.seenImages || new Set<string>();
   const seenSlugs = new Set<string>();
+  const allowAny = opts?.allowAny ?? true;
 
   const pass = (checkArtist: boolean, checkImage: boolean) => {
     for (const r of rows) {
@@ -72,8 +83,8 @@ function pickFeed<T extends { title: string; slug: string; imageUrl: string | nu
   pass(true, true);
   // 2) Relax: allow repeating images, still keep artists unique
   pass(true, false);
-  // 3) Relax fully: fill any remaining slots
-  pass(false, false);
+  // 3) Relax fully: fill any remaining slots (opt-in)
+  if (allowAny) pass(false, false);
 
   return out;
 }
@@ -102,7 +113,7 @@ export default async function Home() {
     }),
   ]);
 
-  const editorsPicks = pickFeed(editorsPicksRaw, 4);
+  const editorsPicks = pickFeed(editorsPicksRaw, 4, { allowAny: false });
 
   // Avoid repeating the same artist/image across sections.
   const homeSeenArtists = new Set<string>(
@@ -125,6 +136,7 @@ export default async function Home() {
   const latestNews = pickFeed(latestNewsRaw, 8, {
     seenArtists: homeSeenArtists,
     seenImages: homeSeenImages,
+    allowAny: false,
   });
 
   // JSON-LD structured data for the page
