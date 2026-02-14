@@ -70,8 +70,8 @@ function pickFeed<T extends { title: string; slug: string; imageUrl: string | nu
 
   // 1) Strict: unique artist + unique image
   pass(true, true);
-  // 2) Relax: allow same artist, still keep images unique
-  pass(false, true);
+  // 2) Relax: allow repeating images, still keep artists unique
+  pass(true, false);
   // 3) Relax fully: fill any remaining slots
   pass(false, false);
 
